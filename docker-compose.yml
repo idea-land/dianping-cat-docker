@@ -1,0 +1,58 @@
+version: "3.1"
+services:
+  secret-simulator:
+    image: mikesir87/secrets-simulator
+    volumes:
+      - secrets:/run/secrets:rw
+    environment:
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - catnet
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "13306:3306"
+    environment:
+#      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/DATABASE_PASSWORD
+    entrypoint: ['docker-entrypoint.sh', '--default-authentication-plugin=mysql_native_password']
+    security_opt:
+      - seccomp:unconfined
+    networks:
+      - catnet
+    volumes:
+      - secrets:/run/secrets:ro
+  web:
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_USER=root
+#      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - CATALINA_OPTS=-Xmx1024M -Xms256M
+    # replace username/repo:tag with your name and image details
+    build: .
+    image: dianping/cat-home:3.0
+    restart: unless-stopped
+#   entrypoint: "/app/wait-for-mysql.sh /app/entrypoint.sh"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 1024M
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - secrets:/run/secrets:ro
+    ports:
+#      - "2280:2280"
+      - "18080:8080"
+    networks:
+      - catnet
+#    depends_on:
+#      - "mysql"
+networks:
+  catnet:
+  
+volumes:
+  secrets:
+    driver: local
