@@ -1,6 +1,6 @@
 version: "3.1"
 services:
-  secret-simulator:
+  asecret-simulator:
     image: mikesir87/secrets-simulator
     volumes:
       - secrets:/run/secrets:rw
@@ -8,6 +8,9 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
     networks:
       - catnet
+    deploy:
+      restart_policy:
+        condition: none
   mysql:
     image: mysql:5.7
     ports:
@@ -22,6 +25,9 @@ services:
       - catnet
     volumes:
       - secrets:/run/secrets:ro
+      - /var/lib/mysql
+    depends_on:
+      - "asecret-simulator"
   web:
     environment:
       - DATABASE_HOST=mysql
@@ -30,7 +36,7 @@ services:
       - CATALINA_OPTS=-Xmx1024M -Xms256M
     # replace username/repo:tag with your name and image details
     build: .
-    image: dianping/cat-home:3.0
+    image: land/dianping-cat-home:3.0
     restart: unless-stopped
 #   entrypoint: "/app/wait-for-mysql.sh /app/entrypoint.sh"
     deploy:
@@ -43,16 +49,21 @@ services:
         condition: on-failure
     volumes:
       - secrets:/run/secrets:ro
+      - appdata:/data/appdatas
     ports:
-#      - "2280:2280"
+      - "12280:2280"
       - "18080:8080"
     networks:
       - catnet
-#    depends_on:
-#      - "mysql"
+    depends_on:
+      - "mysql"
 networks:
   catnet:
-  
+    driver: overlay
 volumes:
   secrets:
+    driver: local
+  db:
+    driver: local
+  appdata:
     driver: local

@@ -11,9 +11,10 @@ mkdir -p /usr/local/tomcat/webapps/cat &&  cd  /usr/local/tomcat/webapps/cat && 
 unzip /tmp/cat*.war && rm -rf /tmp/*
 
 #support mysql 8
-RUN cd  /usr/local/tomcat/webapps/cat/WEB-INF/lib && rm -f mysql*.jar && \
-wget http://central.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
+#RUN cd  /usr/local/tomcat/webapps/cat/WEB-INF/lib && rm -f mysql*.jar && \
+#wget http://central.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar
 
+RUN apk --no-cache add libc6-compat  
 ADD script/ /
 RUN chmod +x /app/*.sh && mkdir -p /data/applogs/cat && \
 cd  /usr/local/tomcat/conf && \

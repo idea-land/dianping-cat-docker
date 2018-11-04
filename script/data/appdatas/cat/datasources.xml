@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <data-sources>
     <data-source id="cat">
         <maximum-pool-size>3</maximum-pool-size>
@@ -11,8 +10,7 @@
             <url><![CDATA[jdbc:mysql://jdbcHost:3306/cat]]></url>
             <user>jdbcUser</user>
             <password>jdbcPassword</password>
-            <connectionProperties>
-                <![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+            <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
         </properties>
     </data-source>
     <data-source id="app">
@@ -25,8 +23,7 @@
             <url><![CDATA[jdbc:mysql://jdbcHost:3306/cat]]></url>
             <user>jdbcUser</user>
             <password>jdbcPassword</password>
-            <connectionProperties>
-                <![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+            <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
         </properties>
     </data-source>
 </data-sources>
